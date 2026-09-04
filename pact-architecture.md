@@ -1,4 +1,4 @@
-# MandateGuard
+# PACT (Proactive AutoPay Compliance & Tracking)
 ### A Compliant UPI AutoPay / E-Mandate Recovery Orchestrator
 **Razorpay AI Buildathon 2026 — Track 03: AI Revenue Recovery**
 

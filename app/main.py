@@ -33,7 +33,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
-    description="A Compliant UPI AutoPay / E-Mandate Recovery Orchestrator (Track 03)",
+    description="PACT: Proactive AutoPay Compliance & Tracking (Track 03)",
     lifespan=lifespan
 )
 
@@ -57,7 +57,7 @@ async def root():
     index_path = os.path.join(static_dir, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
-    return {"message": "MandateGuard API is running. Please access the dashboard once frontend is installed."}
+    return {"message": "PACT API is running. Please access the dashboard once frontend is installed."}
 
 if __name__ == "__main__":
     import uvicorn

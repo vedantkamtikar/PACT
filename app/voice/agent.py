@@ -31,7 +31,7 @@ class HinglishVoiceAgent:
         turns: List[CallTurn] = [
             CallTurn(
                 speaker="Agent",
-                text=f"Namaste {first_name} ji! Main Razorpay MandateGuard support desk se bol rahi hoon. Kya meri baat {record.customer_name} ji se ho rahi hai?",
+                text=f"Namaste {first_name} ji! Main Razorpay PACT support desk se bol rahi hoon. Kya meri baat {record.customer_name} ji se ho rahi hai?",
                 timestamp=now.isoformat()
             ),
             CallTurn(
@@ -67,7 +67,7 @@ class HinglishVoiceAgent:
         ]
 
         # Synthesize opening Hinglish voice line via Sarvam AI
-        intro_text = f"Namaste {first_name} ji! Main Razorpay MandateGuard desk se bol rahi hoon aapke {record.merchant_name} auto-debit ke baare mein."
+        intro_text = f"Namaste {first_name} ji! Main Razorpay PACT desk se bol rahi hoon aapke {record.merchant_name} auto-debit ke baare mein."
         audio_uri, is_live = sarvam_service.synthesize_speech(intro_text)
 
         call_record = VoiceCallRecord(

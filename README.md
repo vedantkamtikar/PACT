@@ -1,4 +1,4 @@
-# 🛡️ MandateGuard
+# 🛡️ PACT (Proactive AutoPay Compliance & Tracking)
 ### A Compliant UPI AutoPay / E-Mandate Recovery Orchestrator
 **Razorpay AI Buildathon 2026 — Track 03: AI Revenue Recovery**
 
@@ -15,7 +15,7 @@ UPI AutoPay processes approximately **1 billion recurring debits monthly**, yet 
 1. Violate **NPCI guidelines** (capping retries at 3 attempts and strictly prohibiting execution during the 10:00 AM – 1:00 PM IST morning peak blackout).
 2. Breach the **RBI E-Mandate Framework** by ignoring mandatory 24-hour pre-debit notifications and retrying regulatory hard-stop declines.
 
-**MandateGuard** solves this through **AI Judgment**:
+**PACT** solves this through **AI Judgment**:
 - **Probabilistic AI (LLMs)** is used exclusively where unstructured data exists: normalizing noisy, free-text bank decline messages into a standardized taxonomy, and conducting natural, guardrailed Hinglish voice dialogue.
 - **Deterministic Compliance Engine (Pure Code, No LLMs)** enforces regulatory rules: NPCI cooldown windows (24h $\rightarrow$ 72h $\rightarrow$ 168h), morning peak blackout protection (10am–1pm IST), 24h pre-debit notices, and hard stops for non-transient regulatory blocks (`RBI_APPROVAL_REQUIRED`, `MANDATE_EXPIRED`).
 
@@ -106,8 +106,8 @@ UPI AutoPay processes approximately **1 billion recurring debits monthly**, yet 
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/vedantkamtikar/MandateGuard.git
-cd MandateGuard
+git clone https://github.com/vedantkamtikar/PACT.git
+cd PACT
 pip install -r requirements.txt
 ```
 
@@ -119,7 +119,7 @@ GROQ_API_KEY=your_groq_key_here
 SARVAM_API_KEY=your_sarvam_key_here
 PORT=8000
 ```
-> *Note: MandateGuard includes full heuristic classification and synthesized audio fallbacks, running out-of-the-box even without API keys.*
+> *Note: PACT includes full heuristic classification and synthesized audio fallbacks, running out-of-the-box even without API keys.*
 
 ### 3. Run Application
 ```bash

@@ -9,7 +9,7 @@ def test_api_status():
     resp = client.get("/api/status")
     assert resp.status_code == 200
     data = resp.json()
-    assert data["app_name"] == "MandateGuard"
+    assert "PACT" in data["app_name"]
     assert "simulated_time_ist" in data
     assert "is_in_blackout" in data
 

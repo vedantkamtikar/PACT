@@ -1,4 +1,4 @@
-// MandateGuard Dashboard Logic
+// PACT (Proactive AutoPay Compliance & Tracking) Dashboard Logic
 const state = {
   status: null,
   analytics: null,
@@ -204,7 +204,7 @@ async function openVoiceCallModal(mandateId) {
       const div = document.createElement('div');
       div.className = `chat-turn ${isAgent ? 'agent' : 'customer'}`;
       div.innerHTML = `
-        <div class="speaker-label">${turn.speaker} ${isAgent ? '• MandateGuard Desk' : ''}</div>
+        <div class="speaker-label">${turn.speaker} ${isAgent ? '• PACT Desk' : ''}</div>
         <div class="bubble">${turn.text}</div>
       `;
       container.appendChild(div);

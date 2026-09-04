@@ -1,1 +1,1 @@
-"""Test suite for MandateGuard"""
+"""Test suite for PACT"""
