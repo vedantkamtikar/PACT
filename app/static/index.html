@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MandateGuard — Compliant UPI AutoPay Recovery Orchestrator</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand-container">
+      <div class="brand-logo">🛡️</div>
+      <div>
+        <div class="brand-title">
+          MandateGuard
+          <span class="brand-badge">NPCI / RBI Compliant</span>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">
+          Track 03: AI Revenue Recovery — Razorpay AI Buildathon 2026
+        </div>
+      </div>
+    </div>
+
+    <div class="header-status">
+      <div class="clock-display" title="Current Virtual Simulated Clock in IST">
+        <div id="clockPulseDot" class="pulse-dot"></div>
+        <span id="simulatedTimeClock">Loading IST clock...</span>
+        <span id="hoursAdvancedLabel" style="color: var(--brand-cyan); font-weight: 600;">+0h</span>
+      </div>
+
+      <div id="blackoutBadge" class="blackout-badge inactive">
+        ✅ Compliant Window (Ready)
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-secondary btn-sm" onclick="generateBatch()" title="Generate new 60-item synthetic batch">
+          🎲 New Batch
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="processBatch()" title="Run AI classification & compliance engine">
+          ⚡ Process Rules
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="openAuditTrailModal()" title="View global cryptographic audit trail">
+          📜 Global Audit
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="resetSystem()" title="Reset demo to initial state">
+          🔄 Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Virtual Time Machine Scrubber Bar -->
+    <section class="time-travel-bar">
+      <div class="time-travel-label">
+        <span style="font-size: 1.5rem;">⏱️</span>
+        <div>
+          <h3>Virtual Time Machine (NPCI Windows & Blackout Testing)</h3>
+          <p>Advance time through NPCI cooldown windows (24h / 72h / 168h) or force morning peak blackout (10am–1pm IST) to test zero-violation enforcement.</p>
+        </div>
+      </div>
+
+      <div class="time-travel-actions">
+        <button class="btn btn-secondary btn-sm" onclick="advanceClock(24)" title="Advance 24 Hours (1st Retry Window)">
+          +24h (1st Window)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="advanceClock(72)" title="Advance 72 Hours (2nd Retry Window)">
+          +72h (2nd Window)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="advanceClock(168)" title="Advance 7 Days (Final Window)">
+          +7 Days (Final Window)
+        </button>
+        <button class="btn btn-warning btn-sm" onclick="jumpToBlackout()" title="Jump to 11:30 AM IST (NPCI peak blackout window)">
+          ⚡ Jump into Blackout (11:30 AM)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="jumpToCompliant()" title="Jump to 1:15 PM IST (compliant execution window)">
+          ✅ Compliant Window (1:15 PM)
+        </button>
+        <button class="btn btn-success" onclick="executeDueDebits()" title="Attempt collection on all matured retries">
+          ▶️ Execute Due Debits Now
+        </button>
+      </div>
+    </section>
+
+    <!-- Executive KPI Grid -->
+    <section class="kpi-grid">
+      <div class="kpi-card blue">
+        <div class="kpi-header">
+          <span class="kpi-title">Total ₹ At Risk</span>
+          <div class="kpi-icon" style="color: var(--brand-cyan);">📉</div>
+        </div>
+        <div class="kpi-value" id="kpiAtRisk">₹0</div>
+        <div class="kpi-subtitle">
+          Failed UPI AutoPay & E-Mandates
+        </div>
+      </div>
+
+      <div class="kpi-card green">
+        <div class="kpi-header">
+          <span class="kpi-title">Total ₹ Recovered</span>
+          <div class="kpi-icon" style="color: var(--accent-success);">💰</div>
+        </div>
+        <div class="kpi-value" id="kpiRecovered" style="color: var(--accent-success);">₹0</div>
+        <div class="kpi-subtitle">
+          Settled via compliant retries & PTP
+        </div>
+      </div>
+
+      <div class="kpi-card purple">
+        <div class="kpi-header">
+          <span class="kpi-title">Overall Recovery Rate</span>
+          <div class="kpi-icon" style="color: var(--accent-purple);">📈</div>
+        </div>
+        <div class="kpi-value" id="kpiRate">0.0%</div>
+        <div class="kpi-subtitle">
+          Excludes hard stops by design
+        </div>
+      </div>
+
+      <div class="kpi-card green">
+        <div class="kpi-header">
+          <span class="kpi-title">Compliance Violations</span>
+          <div class="kpi-icon" style="color: var(--accent-success);">🛡️</div>
+        </div>
+        <div class="kpi-value" id="kpiViolations" style="color: var(--accent-success);">0 / 0</div>
+        <div class="kpi-subtitle">
+          <span class="kpi-badge" style="background: var(--accent-success-bg); color: var(--accent-success); border: 1px solid rgba(16, 185, 129, 0.3);">100% Guaranteed Zero Violations</span>
+        </div>
+      </div>
+
+      <div class="kpi-card amber">
+        <div class="kpi-header">
+          <span class="kpi-title">Stopping Rules Triggered</span>
+          <div class="kpi-icon" style="color: var(--accent-warning);">🛑</div>
+        </div>
+        <div class="kpi-value" id="kpiStoppingRules">0</div>
+        <div class="kpi-subtitle">
+          Max 3 Retries Cap & RBI Hard Stops
+        </div>
+      </div>
+
+      <div class="kpi-card purple">
+        <div class="kpi-header">
+          <span class="kpi-title">Voice Escalations</span>
+          <div class="kpi-icon" style="color: var(--accent-purple);">🎧</div>
+        </div>
+        <div class="kpi-value" id="kpiVoiceCount" style="color: var(--accent-purple);">0 calls</div>
+        <div class="kpi-subtitle">
+          Hinglish Promise-to-Pay Desk
+        </div>
+      </div>
+    </section>
+
+    <!-- Decline Taxonomy Breakdown -->
+    <section class="categories-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>🏷️</span> Decline Taxonomy & Recovery Analytics
+        </h2>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">
+          Click any card to filter mandates below
+        </span>
+      </div>
+      <div class="category-grid" id="categoryGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Mandates Table -->
+    <section class="table-section">
+      <div class="table-toolbar">
+        <div class="toolbar-tabs">
+          <button class="tab-btn active" data-filter="ALL" onclick="setFilter('ALL')">All Mandates</button>
+          <button class="tab-btn" data-filter="RETRY_SCHEDULED" onclick="setFilter('RETRY_SCHEDULED')">Retry Scheduled</button>
+          <button class="tab-btn" data-filter="ESCALATED_VOICE" onclick="setFilter('ESCALATED_VOICE')">Voice Escalated</button>
+          <button class="tab-btn" data-filter="PROMISE_SECURED" onclick="setFilter('PROMISE_SECURED')">Promise Secured</button>
+          <button class="tab-btn" data-filter="RECOVERED" onclick="setFilter('RECOVERED')">Recovered</button>
+          <button class="tab-btn" data-filter="HARD_STOP" onclick="setFilter('HARD_STOP')">Hard Stops</button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span id="tableCountDisplay" style="font-size: 0.75rem; color: var(--text-muted);">Loading...</span>
+          <input type="text" id="tableSearch" class="search-input" placeholder="🔍 Search customer, UMN, merchant...">
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Merchant & UMN</th>
+              <th>Amount</th>
+              <th>Decline Category</th>
+              <th>Status / Attempts</th>
+              <th>Next Scheduled Window</th>
+              <th style="text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="mandatesTableBody">
+            <!-- Injected via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Voice Call Simulation Modal -->
+  <div id="voiceModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🎧</span>
+          Hinglish Voice Agent — Promise-to-Pay Call
+        </div>
+        <button class="modal-close" onclick="closeModal('voiceModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="call-simulator-header">
+          <div>
+            <div style="font-weight: 700; font-size: 1.05rem;" id="callCustomerName">Customer Name</div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary); font-family: var(--font-mono);" id="callCustomerPhone">+91 00000 00000</div>
+            <div style="font-size: 0.75rem; color: var(--brand-cyan); margin-top: 0.25rem;" id="callMerchantSub">Merchant — Plan</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Debit Amount</div>
+            <div style="font-size: 1.35rem; font-weight: 700; color: #fff; font-family: var(--font-display);" id="callAmount">₹0</div>
+          </div>
+        </div>
+
+        <!-- Audio Player -->
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <span style="font-size: 0.75rem; font-weight: 600; color: var(--accent-purple);">
+              🎙️ Sarvam AI Audio Stream (Hinglish Synthesis)
+            </span>
+            <button class="btn btn-secondary btn-sm" onclick="speakVoiceScript()" title="Play spoken audio via Web Speech synthesis">
+              🔊 Live Speech
+            </button>
+          </div>
+          <audio id="callAudioPlayer" class="call-audio-player" controls></audio>
+        </div>
+
+        <!-- Dialogue Turns -->
+        <div>
+          <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">
+            Conversation Transcript (Guardrailed Negotiation)
+          </div>
+          <div id="chatBubbleContainer" class="chat-bubble-container">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Promise Secured Card -->
+        <div class="promise-card">
+          <div>
+            <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 600; color: var(--accent-success);">
+              🤝 Promise-to-Pay Secured
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 700; margin-top: 0.2rem;" id="ptpDateDisplay">
+              Date
+            </div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">
+              NPCI 24h pre-debit reminder will be dispatched prior to execution
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.72rem; color: var(--text-muted);">Committed Amount</div>
+            <div style="font-size: 1.15rem; font-weight: 700; color: var(--accent-success);" id="ptpAmountDisplay">₹0</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Cryptographic Audit Trail Modal -->
+  <div id="auditModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>📜</span>
+          <span id="auditModalTitle">Cryptographic Audit Trail</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('auditModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="auditList" class="audit-list">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- JavaScript -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
