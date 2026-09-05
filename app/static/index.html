@@ -15,21 +15,40 @@
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Header / Navigation -->
   <header class="app-header">
     <div class="brand-container">
       <div class="brand-logo">🛡️</div>
       <div>
         <div class="brand-title">
           PACT
-          <span class="brand-badge">NPCI / RBI Compliant</span>
-        </div>
-        <div style="font-size: 0.72rem; color: var(--text-muted);">
-          Proactive AutoPay Compliance & Tracking — Razorpay AI Buildathon 2026 (Track 03)
+          <span class="brand-badge">AI Orchestrator</span>
         </div>
       </div>
     </div>
 
+    <!-- 6-7 Navigation Links Center/Left -->
+    <nav class="nav-links">
+      <a href="#time-machine" class="nav-link">Time Machine</a>
+      <a href="#kpi-section" class="nav-link">KPI Metrics</a>
+      <a href="#taxonomy-section" class="nav-link">Decline Taxonomy</a>
+      <a href="#mandates-section" class="nav-link">Mandate Queue</a>
+      <a href="javascript:void(0)" onclick="openVoiceCallModal('demo')" class="nav-link">Voice Desk</a>
+      <a href="javascript:void(0)" onclick="openAuditTrailModal()" class="nav-link">Audit Trail</a>
+      <a href="javascript:void(0)" onclick="showToast('NPCI Circular Compliance: Max 3 retries (24h/72h/168h cooldown), 10am-1pm peak blackout protection active.', 'info')" class="nav-link">NPCI Circulars</a>
+    </nav>
+
+    <!-- Utility Icons & Actions Right -->
+    <div class="nav-utilities">
+      <button class="nav-utility-item" onclick="openVoiceCallModal('demo')" title="Voice Support Desk">
+        <span>🎧</span> Support
+      </button>
+      <div class="nav-utility-item" title="Indian Standard Time">
+        <span>🇮🇳</span> IST
+      </div>
+    </div>
+
+    <!-- Live Status & Primary Buttons -->
     <div class="header-status">
       <div class="clock-display" title="Current Virtual Simulated Clock in IST">
         <div id="clockPulseDot" class="pulse-dot"></div>
@@ -41,28 +60,149 @@
         ✅ Compliant Window (Ready)
       </div>
 
-      <div style="display: flex; gap: 0.5rem;">
+      <button class="btn btn-primary btn-sm" onclick="processBatch()" title="Run AI classification & compliance engine">
+        ⚡ Run Engine
+      </button>
+    </div>
+  </header>
+
+  <!-- Agentic Product Hero Section -->
+  <section class="agentic-hero">
+    <div class="hero-inner">
+      
+      <!-- Left Column: Typography & CTAs -->
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-dot"></span>
+          INTRODUCING PACT · AGENTIC REVENUE RECOVERY
+        </div>
+
+        <h1 class="hero-headline">
+          <span>Autonomous</span>
+          <span>UPI AutoPay</span>
+          <span class="gradient-accent">Revenue Agent.</span>
+        </h1>
+
+        <p class="hero-subheadline">
+          Engineered with deterministic NPCI compliance boundaries and ambient Hinglish voice intelligence to recover failed e-mandates at zero regulatory risk.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#time-machine" class="hero-cta-btn">
+            Explore Recovery Engine
+            <span class="cta-arrow">→</span>
+          </a>
+          <button class="hero-secondary-btn" onclick="openVoiceCallModal('demo')" title="Experience Hinglish conversational negotiation">
+            <span>🎧</span>
+            Hear Hinglish Call
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column: Color-Graded Duotone Subject & Floating Glassmorphic Cards -->
+      <div class="hero-visual-wrapper">
+        <div class="hero-subject-container">
+          <img src="/static/img/hero_agent.jpg" class="hero-subject-img" alt="PACT AI Agent Subject">
+          
+          <!-- Floating Card 1: Currency & Recovery -->
+          <div class="hero-float-card card-currency">
+            <div class="float-icon-box cyan">₹</div>
+            <div class="float-card-content">
+              <span class="float-card-title">₹12,500 Recovered</span>
+              <span class="float-card-desc">Compliant 72h Window</span>
+            </div>
+          </div>
+
+          <!-- Floating Card 2: Voice Waveform & Hinglish Agent -->
+          <div class="hero-float-card card-voice">
+            <div class="float-icon-box purple">🎙️</div>
+            <div class="float-card-content">
+              <span class="float-card-title">Hinglish Voice Desk</span>
+              <div class="audio-waveform-bars">
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+                <div class="waveform-bar"></div>
+              </div>
+              <span class="float-card-desc" style="margin-top: 2px;">Promise-to-Pay Secured</span>
+            </div>
+          </div>
+
+          <!-- Floating Card 3: 100% NPCI Compliance Shield -->
+          <div class="hero-float-card card-compliance">
+            <div class="float-icon-box emerald">🛡️</div>
+            <div class="float-card-content">
+              <span class="float-card-title">100% NPCI Compliant</span>
+              <span class="float-card-desc">0 Blackout Violations</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Large Pill-Shaped Interactive Frosted Glass Input Bar -->
+    <div class="hero-interactive-container">
+      <div class="hero-interactive-bar">
+        <button class="pill-plus-btn" onclick="handlePillPlusClick()" title="Quick Prompt suggestions">+</button>
+        <div class="pill-input-wrapper">
+          <input type="text" id="heroAgentInput" class="hero-pill-input" placeholder="Ask PACT anything: 'Simulate blackout', 'Call Rahul Verma', 'Advance 24h', 'Execute due retries'...">
+        </div>
+        <div class="pill-actions">
+          <button class="pill-mic-btn" id="heroMicBtn" onclick="handlePillMicClick()" title="Click to speak or simulate Hinglish agent interaction">
+            <span class="mic-wave-ring"></span>
+            🎙️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Proof Footer: Flat Grayscale Banking Logos -->
+    <div class="hero-social-proof">
+      <div class="social-proof-label">Trusted Compliance Integration Across India's Payment Rail</div>
+      <div class="social-proof-logos">
+        <div class="partner-logo-item"><span class="partner-icon">🏛️</span> NPCI</div>
+        <div class="partner-logo-item"><span class="partner-icon">⚡</span> UPI AutoPay</div>
+        <div class="partner-logo-item"><span class="partner-icon">💳</span> Razorpay</div>
+        <div class="partner-logo-item"><span class="partner-icon">🏦</span> HDFC Bank</div>
+        <div class="partner-logo-item"><span class="partner-icon">🏦</span> ICICI Bank</div>
+        <div class="partner-logo-item"><span class="partner-icon">🏦</span> State Bank of India</div>
+        <div class="partner-logo-item"><span class="partner-icon">🏦</span> Axis Bank</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="main-container" id="orchestrator-dashboard">
+
+    <!-- Dashboard Control Header & Quick Actions -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: -0.5rem;">
+      <div>
+        <h2 style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: #fff;">
+          Live Recovery Orchestrator
+        </h2>
+        <p style="font-size: 0.78rem; color: var(--text-muted);">
+          Deterministic state machine bounded by NPCI AutoPay circulars & RBI e-mandate directives
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
         <button class="btn btn-secondary btn-sm" onclick="generateBatch()" title="Generate new 60-item synthetic batch">
           🎲 New Batch
-        </button>
-        <button class="btn btn-primary btn-sm" onclick="processBatch()" title="Run AI classification & compliance engine">
-          ⚡ Process Rules
         </button>
         <button class="btn btn-secondary btn-sm" onclick="openAuditTrailModal()" title="View global cryptographic audit trail">
           📜 Global Audit
         </button>
         <button class="btn btn-secondary btn-sm" onclick="resetSystem()" title="Reset demo to initial state">
-          🔄 Reset
+          🔄 Reset Demo
         </button>
       </div>
     </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="main-container">
 
     <!-- Virtual Time Machine Scrubber Bar -->
-    <section class="time-travel-bar">
+    <section class="time-travel-bar" id="time-machine">
       <div class="time-travel-label">
         <span style="font-size: 1.5rem;">⏱️</span>
         <div>
@@ -94,7 +234,7 @@
     </section>
 
     <!-- Executive KPI Grid -->
-    <section class="kpi-grid">
+    <section class="kpi-grid" id="kpi-section">
       <div class="kpi-card blue">
         <div class="kpi-header">
           <span class="kpi-title">Total ₹ At Risk</span>
@@ -163,7 +303,7 @@
     </section>
 
     <!-- Decline Taxonomy Breakdown -->
-    <section class="categories-section">
+    <section class="categories-section" id="taxonomy-section">
       <div class="section-header">
         <h2 class="section-title">
           <span>🏷️</span> Decline Taxonomy & Recovery Analytics
@@ -178,7 +318,7 @@
     </section>
 
     <!-- Mandates Table -->
-    <section class="table-section">
+    <section class="table-section" id="mandates-section">
       <div class="table-toolbar">
         <div class="toolbar-tabs">
           <button class="tab-btn active" data-filter="ALL" onclick="setFilter('ALL')">All Mandates</button>

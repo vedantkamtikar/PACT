@@ -174,8 +174,20 @@ async function resetSystem() {
 // Voice Call Simulation Modal
 async function openVoiceCallModal(mandateId) {
   try {
+    let targetId = mandateId;
+    if (!targetId || targetId === 'demo' || targetId === 'man_demo') {
+      const candidate = state.mandates.find(m => m.status === 'ESCALATED_VOICE' || m.decline_type === 'INSUFFICIENT_FUNDS');
+      targetId = candidate ? candidate.id : (state.mandates[0] ? state.mandates[0].id : null);
+    }
+    if (!targetId) {
+      showToast('Generating batch for voice agent...', 'info');
+      await generateBatch();
+      targetId = state.mandates[0]?.id;
+    }
+    if (!targetId) return;
+
     showToast('Initiating Hinglish Voice Agent call...', 'info');
-    const res = await fetch(`/api/voice/call/${mandateId}`, { method: 'POST' });
+    const res = await fetch(`/api/voice/call/${targetId}`, { method: 'POST' });
     const data = await res.json();
     
     const callRecord = data.call_record;
@@ -495,6 +507,82 @@ async function refreshAll() {
   await Promise.all([fetchStatus(), fetchAnalytics(), fetchMandates()]);
 }
 
+// Interactive Hero Pill Bar Functions
+const suggestedPrompts = [
+  "Simulate peak blackout (11:30 AM IST)",
+  "Advance clock +24h (1st NPCI window)",
+  "Advance clock +72h (2nd NPCI window)",
+  "Execute due debits now",
+  "Call customer (Hinglish PTP)",
+  "Filter insufficient funds"
+];
+let promptIndex = 0;
+
+function handlePillPlusClick() {
+  const input = document.getElementById('heroAgentInput');
+  if (!input) return;
+  input.value = suggestedPrompts[promptIndex];
+  promptIndex = (promptIndex + 1) % suggestedPrompts.length;
+  input.focus();
+  showToast(`Loaded prompt: "${input.value}" (Press Enter to execute)`, 'info');
+}
+
+function handlePillMicClick() {
+  const micBtn = document.getElementById('heroMicBtn');
+  if (micBtn) {
+    micBtn.style.transform = 'scale(1.2)';
+    setTimeout(() => { if (micBtn) micBtn.style.transform = ''; }, 400);
+  }
+  showToast('🎙️ Activating Hinglish Voice Agent desk...', 'info');
+  openVoiceCallModal('demo');
+}
+
+function handleHeroCommand(cmdText) {
+  if (!cmdText) return;
+  const text = cmdText.trim().toLowerCase();
+  
+  if (text.includes('blackout') || text.includes('11:30') || text.includes('peak')) {
+    jumpToBlackout();
+    smoothScrollTo('time-machine');
+  } else if (text.includes('compliant') || text.includes('1:15') || text.includes('resume')) {
+    jumpToCompliant();
+    smoothScrollTo('time-machine');
+  } else if (text.includes('24') || text.includes('1st window')) {
+    advanceClock(24);
+    smoothScrollTo('time-machine');
+  } else if (text.includes('72') || text.includes('2nd window')) {
+    advanceClock(72);
+    smoothScrollTo('time-machine');
+  } else if (text.includes('168') || text.includes('7d') || text.includes('7 day') || text.includes('final')) {
+    advanceClock(168);
+    smoothScrollTo('time-machine');
+  } else if (text.includes('exec') || text.includes('debit') || text.includes('run') || text.includes('recover')) {
+    executeDueDebits();
+    smoothScrollTo('time-machine');
+  } else if (text.includes('call') || text.includes('voice') || text.includes('hinglish') || text.includes('ptp')) {
+    openVoiceCallModal('demo');
+  } else if (text.includes('audit')) {
+    openAuditTrailModal();
+  } else if (text.includes('reset')) {
+    resetSystem();
+  } else {
+    // Treat as search query and filter table
+    state.searchQuery = cmdText.trim();
+    const tableSearch = document.getElementById('tableSearch');
+    if (tableSearch) tableSearch.value = cmdText.trim();
+    renderTable();
+    smoothScrollTo('mandates-section');
+    showToast(`Filtered mandate queue for "${cmdText.trim()}"`, 'info');
+  }
+}
+
+function smoothScrollTo(elementId) {
+  const el = document.getElementById(elementId);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
 // Initial setup
 window.addEventListener('DOMContentLoaded', async () => {
   // Search input listener
@@ -503,6 +591,16 @@ window.addEventListener('DOMContentLoaded', async () => {
     searchEl.addEventListener('input', (e) => {
       state.searchQuery = e.target.value;
       renderTable();
+    });
+  }
+
+  // Hero Pill Input Enter listener
+  const heroInput = document.getElementById('heroAgentInput');
+  if (heroInput) {
+    heroInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        handleHeroCommand(heroInput.value);
+      }
     });
   }
 
