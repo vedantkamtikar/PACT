@@ -99,7 +99,7 @@ async function jumpToBlackout() {
   try {
     const res = await fetch('/api/clock/jump-blackout', { method: 'POST' });
     const data = await res.json();
-    showToast('⚠️ Jumped into NPCI Peak Blackout Window (11:30 AM IST)', 'warning');
+    showToast('Jumped into NPCI Peak Blackout Window (11:30 AM IST)', 'warning');
     await refreshAll();
   } catch (e) {
     showToast('Failed to jump to blackout', 'danger');
@@ -110,7 +110,7 @@ async function jumpToCompliant() {
   try {
     const res = await fetch('/api/clock/jump-compliant', { method: 'POST' });
     const data = await res.json();
-    showToast('✅ Jumped to Compliant Window (1:15 PM IST)', 'success');
+    showToast('Jumped to Compliant Window (1:15 PM IST)', 'success');
     await refreshAll();
   } catch (e) {
     showToast('Failed to jump to compliant window', 'danger');
@@ -311,11 +311,11 @@ function renderStatus() {
   if (is_in_blackout) {
     pulseDot.className = 'pulse-dot blackout';
     blackoutBadge.className = 'blackout-badge active';
-    blackoutBadge.innerHTML = '⚠️ NPCI Peak Blackout (10am–1pm IST)';
+    blackoutBadge.innerHTML = 'NPCI Peak Blackout (10am–1pm IST)';
   } else {
     pulseDot.className = 'pulse-dot';
     blackoutBadge.className = 'blackout-badge inactive';
-    blackoutBadge.innerHTML = '✅ Compliant Window (Ready)';
+    blackoutBadge.innerHTML = 'Compliant Window (Ready)';
   }
 }
 
@@ -428,19 +428,19 @@ function renderTable() {
     let pillText = m.status;
     if (m.status === 'RECOVERED') {
       pillClass = 'pill-recovered';
-      pillText = '✅ RECOVERED';
+      pillText = 'RECOVERED';
     } else if (m.status === 'ESCALATED_VOICE') {
       pillClass = 'pill-voice';
-      pillText = '🎧 VOICE CALL';
+      pillText = 'VOICE CALL';
     } else if (m.status === 'PROMISE_SECURED') {
       pillClass = 'pill-promise';
-      pillText = '🤝 PROMISE GIVEN';
+      pillText = 'PROMISE GIVEN';
     } else if (m.status.includes('HARD_STOP') || m.status.includes('STOPPING_RULE')) {
       pillClass = 'pill-hardstop';
-      pillText = '🛑 HARD STOP';
+      pillText = 'HARD STOP';
     } else if (m.status === 'RETRY_SCHEDULED') {
       pillClass = 'pill-scheduled';
-      pillText = '⏳ SCHEDULED';
+      pillText = 'SCHEDULED';
     }
 
     // Action button
@@ -448,7 +448,7 @@ function renderTable() {
     if (m.status === 'ESCALATED_VOICE' || (m.decline_type === 'INSUFFICIENT_FUNDS' && m.status !== 'RECOVERED')) {
       actionBtn = `
         <button class="btn btn-purple btn-sm" onclick="openVoiceCallModal('${m.id}')" title="Trigger Hinglish voice call">
-          🎧 Call
+          Call
         </button>
         <button class="btn btn-secondary btn-sm" onclick="openAuditTrailModal('${m.id}')">Audit</button>
       `;
@@ -533,7 +533,7 @@ function handlePillMicClick() {
     micBtn.style.transform = 'scale(1.2)';
     setTimeout(() => { if (micBtn) micBtn.style.transform = ''; }, 400);
   }
-  showToast('🎙️ Activating Hinglish Voice Agent desk...', 'info');
+  showToast('Activating Hinglish Voice Agent desk...', 'info');
   openVoiceCallModal('demo');
 }
 

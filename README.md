@@ -1,4 +1,4 @@
-# 🛡️ PACT (Proactive AutoPay Compliance & Tracking)
+# PACT (Proactive AutoPay Compliance & Tracking)
 ### A Compliant UPI AutoPay / E-Mandate Recovery Orchestrator
 **Razorpay AI Buildathon 2026 — Track 03: AI Revenue Recovery**
 
@@ -9,7 +9,7 @@
 
 ---
 
-## 📌 Executive Summary
+## Executive Summary
 
 UPI AutoPay processes approximately **1 billion recurring debits monthly**, yet experiences failure rates between **8% and 15%** (5–7x higher than card mandates). Naive recovery systems rely on aggressive "retry and email" loops, which:
 1. Violate **NPCI guidelines** (capping retries at 3 attempts and strictly prohibiting execution during the 10:00 AM – 1:00 PM IST morning peak blackout).
@@ -21,7 +21,7 @@ UPI AutoPay processes approximately **1 billion recurring debits monthly**, yet 
 
 ---
 
-## 🏛️ System Architecture
+## System Architecture
 
 ```
                          ┌─────────────────────────┐
@@ -69,7 +69,7 @@ UPI AutoPay processes approximately **1 billion recurring debits monthly**, yet 
 
 ---
 
-## 🏷️ Decline Taxonomy & Recovery Actions
+## Decline Taxonomy & Recovery Actions
 
 | Decline Category | Meaning | Recovery Action | Compliance Rule Cited |
 |---|---|---|---|
@@ -82,7 +82,7 @@ UPI AutoPay processes approximately **1 billion recurring debits monthly**, yet 
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 1. **Deterministic Compliance Engine**:
    - Strictly enforces cooldown windows: 1st retry $\ge 24\text{h}$, 2nd retry $\ge 72\text{h}$, 3rd retry $\ge 168\text{h}$.
@@ -102,7 +102,7 @@ UPI AutoPay processes approximately **1 billion recurring debits monthly**, yet 
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone & Install Dependencies
 ```bash
@@ -135,7 +135,7 @@ pytest
 
 ---
 
-## 🏆 Buildathon Alignment (Track 03: AI Revenue Recovery)
+## Buildathon Alignment (Track 03: AI Revenue Recovery)
 
 - **Measured ₹ Recovered**: Tracks batch-level ₹ recovered vs at-risk across all decline types.
 - **AI Judgment**: Clear separation between deterministic compliance logic (zero hallucinations) and generative AI (normalization & dialogue).
