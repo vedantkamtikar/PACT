@@ -120,7 +120,8 @@ class DeclineClassifier:
 
     def _classify_gemini(self, raw_code: str, raw_message: str) -> Optional[Dict[str, Any]]:
         prompt = CLASSIFICATION_PROMPT.format(raw_code=raw_code, raw_message=raw_message)
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.gemini_api_key}"
+        model = settings.gemini_model or "gemini-1.5-flash"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={self.gemini_api_key}"
         payload = {
             "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {"temperature": 0.1, "response_mime_type": "application/json"}
@@ -131,7 +132,7 @@ class DeclineClassifier:
                 data = resp.json()
                 text = data["candidates"][0]["content"]["parts"][0]["text"]
                 parsed = json.loads(text)
-                parsed["model_used"] = "gemini-1.5-flash"
+                parsed["model_used"] = model
                 return parsed
         return None
 
