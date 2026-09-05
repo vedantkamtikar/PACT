@@ -207,6 +207,7 @@ class MandateRepository:
                     call_id=row["call_id"],
                     mandate_id=row["mandate_id"],
                     customer_name=row["customer_name"],
+                    customer_phone=row["customer_phone"] if "customer_phone" in row.keys() else "",
                     turns=turns,
                     audio_data_uri=row["audio_data_uri"],
                     outcome=row["outcome"],

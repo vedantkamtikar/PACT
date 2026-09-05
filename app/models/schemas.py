@@ -30,7 +30,7 @@ class VoiceCallRecord(BaseModel):
     call_id: str = Field(default_factory=lambda: f"call_{uuid.uuid4().hex[:8]}")
     mandate_id: str
     customer_name: str
-    customer_phone: str
+    customer_phone: str = ""
     language: str = "Hinglish (Hindi + English)"
     turns: List[CallTurn] = []
     audio_data_uri: Optional[str] = None
