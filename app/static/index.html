@@ -3,372 +3,230 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PACT — Proactive AutoPay Compliance & Tracking</title>
+  <title>PACT — Live Recovery Orchestrator &amp; Regulatory Ledger</title>
   
-  <!-- Fonts -->
+  <!-- Institutional Ledger Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Styles -->
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-  <!-- Header / Navigation -->
+  <!-- Dense Top Bar: Logo | Nav | Live Clock / Session State | Primary Action -->
   <header class="app-header">
     <div class="brand-container">
-      <div class="brand-logo">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
       </div>
-      <div>
-        <div class="brand-title">
-          PACT
-          <span class="brand-badge">AI Orchestrator</span>
-        </div>
+      <div class="brand-text">
+        <span class="brand-title">PACT</span>
+        <span class="brand-sub">Regulatory recovery engine</span>
       </div>
     </div>
 
-    <!-- 6-7 Navigation Links Center/Left -->
+    <!-- Navigation Links -->
     <nav class="nav-links">
-      <a href="#time-machine" class="nav-link">Time Machine</a>
-      <a href="#kpi-section" class="nav-link">KPI Metrics</a>
-      <a href="#taxonomy-section" class="nav-link">Decline Taxonomy</a>
-      <a href="#mandates-section" class="nav-link">Mandate Queue</a>
-      <a href="javascript:void(0)" onclick="openVoiceCallModal('demo')" class="nav-link">Voice Desk</a>
-      <a href="javascript:void(0)" onclick="openAuditTrailModal()" class="nav-link">Audit Trail</a>
-      <a href="javascript:void(0)" onclick="showToast('NPCI Circular Compliance: Max 3 retries (24h/72h/168h cooldown), 10am-1pm peak blackout protection active.', 'info')" class="nav-link">NPCI Circulars</a>
+      <a href="#orchestrator-dashboard" class="nav-link active">Orchestrator</a>
+      <a href="#time-machine" class="nav-link">Time machine</a>
+      <a href="#taxonomy-section" class="nav-link">Decline taxonomy</a>
+      <a href="#mandates-section" class="nav-link">Mandate queue</a>
+      <a href="javascript:void(0)" onclick="openVoiceCallModal('demo')" class="nav-link">Voice desk</a>
+      <a href="javascript:void(0)" onclick="openAuditTrailModal()" class="nav-link">Audit log</a>
     </nav>
 
-    <!-- Utility Icons & Actions Right -->
-    <div class="nav-utilities">
-      <button class="nav-utility-item" onclick="openVoiceCallModal('demo')" title="Voice Support Desk">
-        Support
-      </button>
-      <div class="nav-utility-item" title="Indian Standard Time">
-        IST
-      </div>
-    </div>
-
-    <!-- Live Status & Primary Buttons -->
+    <!-- Session State & Control Action -->
     <div class="header-status">
-      <div class="clock-display" title="Current Virtual Simulated Clock in IST">
-        <div id="clockPulseDot" class="pulse-dot"></div>
-        <span id="simulatedTimeClock">Loading IST clock...</span>
-        <span id="hoursAdvancedLabel" style="color: var(--brand-cyan); font-weight: 600;">+0h</span>
+      <div class="clock-display" title="Current simulated clock in Indian Standard Time (IST)">
+        <span class="pulse-dot" id="clockPulseDot"></span>
+        <span class="clock-label">Simulated IST:</span>
+        <span id="simulatedTimeClock" class="clock-mono">Loading clock...</span>
+        <span id="hoursAdvancedLabel" class="hours-mono">+0h</span>
       </div>
 
       <div id="blackoutBadge" class="blackout-badge inactive">
-        Compliant Window (Ready)
+        Compliant window
       </div>
 
-      <button class="btn btn-primary btn-sm" onclick="processBatch()" title="Run AI classification & compliance engine">
-        Run Engine
+      <button class="btn-control" onclick="processBatch()" title="Execute deterministic state machine across current queue">
+        Run engine
       </button>
     </div>
   </header>
 
-  <!-- Agentic Product Hero Section -->
-  <section class="agentic-hero">
-    <div class="hero-inner">
-      
-      <!-- Left Column: Typography & CTAs -->
-      <div class="hero-content">
-        <div class="hero-eyebrow">
-          <span class="eyebrow-dot"></span>
-          INTRODUCING PACT · AGENTIC REVENUE RECOVERY
+  <!-- Thin Ledger-Line Divider: Listing Bound Institutions (Plain Quiet List, No Glow) -->
+  <div class="ledger-institution-bar">
+    <span class="ledger-bar-label">Bound regulatory rails &amp; institutions:</span>
+    <span class="institution-list">
+      <span class="inst-item">NPCI e-mandate</span>
+      <span class="inst-sep">/</span>
+      <span class="inst-item">RBI circular DOR.AUT.REC.67/24.01.041/2021-22</span>
+      <span class="inst-sep">/</span>
+      <span class="inst-item">UPI AutoPay</span>
+      <span class="inst-sep">/</span>
+      <span class="inst-item">Razorpay AutoPay SDK</span>
+      <span class="inst-sep">/</span>
+      <span class="inst-item">HDFC Bank</span>
+      <span class="inst-sep">/</span>
+      <span class="inst-item">ICICI Bank</span>
+      <span class="inst-sep">/</span>
+      <span class="inst-item">State Bank of India</span>
+      <span class="inst-sep">/</span>
+      <span class="inst-item">Axis Bank</span>
+    </span>
+  </div>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Orchestrator Control Header & Asymmetric Hero Row -->
+    <section class="orchestrator-hero-section" id="orchestrator-dashboard">
+      <div class="section-title-row">
+        <div>
+          <h1 class="ledger-page-title">Live recovery orchestrator</h1>
+          <p class="ledger-subtitle">Deterministic state machine bounded by NPCI cooldowns (24h / 72h / 168h) &amp; RBI e-mandate directives</p>
         </div>
 
-        <h1 class="hero-headline">
-          <span>Autonomous</span>
-          <span>UPI AutoPay</span>
-          <span class="gradient-accent">Revenue Agent.</span>
-        </h1>
-
-        <p class="hero-subheadline">
-          Engineered with deterministic NPCI compliance boundaries and ambient Hinglish voice intelligence to recover failed e-mandates at zero regulatory risk.
-        </p>
-
-        <div class="hero-cta-group">
-          <a href="#time-machine" class="hero-cta-btn">
-            Explore Recovery Engine
-            <span class="cta-arrow">→</span>
-          </a>
-          <button class="hero-secondary-btn" onclick="openVoiceCallModal('demo')" title="Experience Hinglish conversational negotiation">
-            Hear Hinglish Call
+        <div class="quick-action-group">
+          <button class="btn-action-quiet" onclick="generateBatch()" title="Generate new 60-item synthetic batch">
+            New batch
+          </button>
+          <button class="btn-action-quiet" onclick="openAuditTrailModal()" title="View global cryptographic audit trail">
+            Global audit
+          </button>
+          <button class="btn-action-quiet" onclick="resetSystem()" title="Reset demo to initial state">
+            Reset demo
           </button>
         </div>
       </div>
 
-      <!-- Right Column: Color-Graded Duotone Subject & Floating Glassmorphic Cards -->
-      <div class="hero-visual-wrapper">
-        <div class="hero-subject-container">
-          <img src="/static/img/hero_agent.jpg" class="hero-subject-img" alt="PACT AI Agent Subject">
-          
-          <!-- Floating Card 1: Currency & Recovery -->
-          <div class="hero-float-card card-currency">
-            <div class="float-icon-box cyan">₹</div>
-            <div class="float-card-content">
-              <span class="float-card-title">₹12,500 Recovered</span>
-              <span class="float-card-desc">Compliant 72h Window</span>
-            </div>
+      <!-- HERO ROW — Asymmetric, not a card grid -->
+      <div class="hero-asymmetric-row">
+        <!-- Left Dominant Block: Large Monospace ₹ At Risk Figure -->
+        <div class="hero-risk-dominant">
+          <div class="dominant-label">Total ₹ at risk</div>
+          <div class="dominant-figure" id="kpiAtRisk">₹0</div>
+          <div class="dominant-subtext">
+            Uncollected failed debits across active NPCI retry cooldown windows (24h / 72h / 168h)
+          </div>
+        </div>
+
+        <!-- Right Compact Stat Rail: Quiet Secondary Strip -->
+        <div class="stat-rail">
+          <div class="stat-cell">
+            <div class="stat-label">Total ₹ recovered</div>
+            <div class="stat-value recovered" id="kpiRecovered">₹0</div>
+            <div class="stat-meta">Settled via compliant windows &amp; PTP</div>
           </div>
 
-          <!-- Floating Card 2: Voice Waveform & Hinglish Agent -->
-          <div class="hero-float-card card-voice">
-            <div class="float-icon-box purple">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <div class="stat-cell">
+            <div class="stat-label">Overall recovery rate</div>
+            <div class="stat-value" id="kpiRate">0.0%</div>
+            <div class="stat-meta">Excludes hard stops by design</div>
+          </div>
+
+          <div class="stat-cell">
+            <div class="stat-label">Compliance violations</div>
+            <div class="stat-value compliant" id="kpiViolations">0 / 0</div>
+            <div class="stat-meta">0 violations — 100% enforced by design</div>
+          </div>
+
+          <div class="stat-cell">
+            <div class="stat-label">Stopping rules triggered</div>
+            <div class="stat-value" id="kpiStoppingRules">0</div>
+            <div class="stat-meta">Max 3 retries cap &amp; RBI hard stops</div>
+          </div>
+
+          <div class="stat-cell voice">
+            <div class="stat-label">
+              <svg class="stat-icon-voice" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
                 <line x1="12" y1="19" x2="12" y2="23"/>
                 <line x1="8" y1="23" x2="16" y2="23"/>
               </svg>
+              Voice escalations
             </div>
-            <div class="float-card-content">
-              <span class="float-card-title">Hinglish Voice Desk</span>
-              <div class="audio-waveform-bars">
-                <div class="waveform-bar"></div>
-                <div class="waveform-bar"></div>
-                <div class="waveform-bar"></div>
-                <div class="waveform-bar"></div>
-                <div class="waveform-bar"></div>
-              </div>
-              <span class="float-card-desc" style="margin-top: 2px;">Promise-to-Pay Secured</span>
-            </div>
+            <div class="stat-value" id="kpiVoiceCount">0 calls</div>
+            <div class="stat-meta">Hinglish promise-to-pay desk</div>
           </div>
+        </div>
+      </div>
+    </section>
 
-          <!-- Floating Card 3: 100% NPCI Compliance Shield -->
-          <div class="hero-float-card card-compliance">
-            <div class="float-icon-box emerald">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <path d="m9 12 2 2 4-4"/>
-              </svg>
-            </div>
-            <div class="float-card-content">
-              <span class="float-card-title">100% NPCI Compliant</span>
-              <span class="float-card-desc">0 Blackout Violations</span>
-            </div>
-          </div>
-
+    <!-- Physical Transport Control Strip (Virtual Time Machine) -->
+    <section class="transport-control-section" id="time-machine">
+      <div class="transport-header">
+        <div class="transport-title-group">
+          <span class="transport-step-indicator">TRANSPORT</span>
+          <h2 class="transport-heading">Virtual time machine &amp; regulatory window scrubber</h2>
+        </div>
+        <div class="transport-status-note">
+          Test NPCI cooldown maturity (24h/72h/168h) &amp; verify morning peak blackout lock (10:00 AM – 1:00 PM IST)
         </div>
       </div>
 
-    </div>
+      <div class="transport-scrubber">
+        <div class="transport-sequence">
+          <button class="transport-btn step" onclick="advanceClock(24)" title="Advance 24 Hours (1st Retry Window)">
+            <span class="step-num">01</span>
+            <span class="step-label">+24h window</span>
+            <span class="step-sub">T+1 maturity</span>
+          </button>
 
-    <!-- Large Pill-Shaped Interactive Frosted Glass Input Bar -->
-    <div class="hero-interactive-container">
-      <div class="hero-interactive-bar">
-        <button class="pill-plus-btn" onclick="handlePillPlusClick()" title="Quick Prompt suggestions">+</button>
-        <div class="pill-input-wrapper">
-          <input type="text" id="heroAgentInput" class="hero-pill-input" placeholder="Ask PACT anything: 'Simulate blackout', 'Call Rahul Verma', 'Advance 24h', 'Execute due retries'...">
+          <button class="transport-btn step" onclick="advanceClock(72)" title="Advance 72 Hours (2nd Retry Window)">
+            <span class="step-num">02</span>
+            <span class="step-label">+72h window</span>
+            <span class="step-sub">T+3 maturity</span>
+          </button>
+
+          <button class="transport-btn step" onclick="advanceClock(168)" title="Advance 7 Days (Final Window)">
+            <span class="step-num">03</span>
+            <span class="step-label">+168h window</span>
+            <span class="step-sub">T+7 final window</span>
+          </button>
+
+          <button class="transport-btn blackout" onclick="jumpToBlackout()" title="Force peak blackout: 11:30 AM IST (Disables retry execution)">
+            <span class="step-num warning">04</span>
+            <span class="step-label">Jump to blackout</span>
+            <span class="step-sub">11:30 AM IST (lock)</span>
+          </button>
+
+          <button class="transport-btn compliant" onclick="jumpToCompliant()" title="Jump to compliant afternoon window: 1:15 PM IST">
+            <span class="step-num success">05</span>
+            <span class="step-label">Compliant window</span>
+            <span class="step-sub">1:15 PM IST (open)</span>
+          </button>
         </div>
-        <div class="pill-actions">
-          <button class="pill-mic-btn" id="heroMicBtn" onclick="handlePillMicClick()" title="Click to speak or simulate Hinglish agent interaction">
-            <span class="mic-wave-ring"></span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-              <line x1="12" y1="19" x2="12" y2="23"/>
-              <line x1="8" y1="23" x2="16" y2="23"/>
-            </svg>
+
+        <div class="transport-execution">
+          <button class="btn-execute-debits" id="executeDebitsBtn" onclick="executeDueDebits()" title="Attempt debit collection strictly on matured retries outside blackout">
+            <span class="execute-dot"></span>
+            Execute due debits now
           </button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Social Proof Footer: Flat Grayscale Banking Logos -->
-    <div class="hero-social-proof">
-      <div class="social-proof-label">Trusted Compliance Integration Across India's Payment Rail</div>
-      <div class="social-proof-logos">
-        <div class="partner-logo-item">NPCI</div>
-        <div class="partner-logo-item">UPI AutoPay</div>
-        <div class="partner-logo-item">Razorpay</div>
-        <div class="partner-logo-item">HDFC Bank</div>
-        <div class="partner-logo-item">ICICI Bank</div>
-        <div class="partner-logo-item">State Bank of India</div>
-        <div class="partner-logo-item">Axis Bank</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Container -->
-  <main class="main-container" id="orchestrator-dashboard">
-
-    <!-- Dashboard Control Header & Quick Actions -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: -0.5rem;">
-      <div>
-        <h2 style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: #fff;">
-          Live Recovery Orchestrator
-        </h2>
-        <p style="font-size: 0.78rem; color: var(--text-muted);">
-          Deterministic state machine bounded by NPCI AutoPay circulars & RBI e-mandate directives
-        </p>
-      </div>
-
-      <div style="display: flex; gap: 0.5rem; align-items: center;">
-        <button class="btn btn-secondary btn-sm" onclick="generateBatch()" title="Generate new 60-item synthetic batch">
-          New Batch
-        </button>
-        <button class="btn btn-secondary btn-sm" onclick="openAuditTrailModal()" title="View global cryptographic audit trail">
-          Global Audit
-        </button>
-        <button class="btn btn-secondary btn-sm" onclick="resetSystem()" title="Reset demo to initial state">
-          Reset Demo
-        </button>
-      </div>
-    </div>
-
-    <!-- Virtual Time Machine Scrubber Bar -->
-    <section class="time-travel-bar" id="time-machine">
-      <div class="time-travel-label">
-        <div style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-sm); background: rgba(0, 217, 245, 0.1); color: var(--brand-cyan);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
-          </svg>
-        </div>
+    <!-- Decline Taxonomy — Differentiated Small Multiples -->
+    <section class="taxonomy-section" id="taxonomy-section">
+      <div class="taxonomy-header">
         <div>
-          <h3>Virtual Time Machine (NPCI Windows & Blackout Testing)</h3>
-          <p>Advance time through NPCI cooldown windows (24h / 72h / 168h) or force morning peak blackout (10am–1pm IST) to test zero-violation enforcement.</p>
+          <h2 class="taxonomy-heading">Decline taxonomy &amp; recovery status</h2>
+          <p class="taxonomy-subheading">Select any classification to isolate regulatory mandate queue below</p>
+        </div>
+        <div class="taxonomy-legend">
+          <span class="legend-item"><span class="legend-box hard-stop"></span> Hard stop (final regulatory block)</span>
+          <span class="legend-item"><span class="legend-box retryable"></span> Retryable (provisional cooldown)</span>
+          <span class="legend-item"><span class="legend-box blackout"></span> Blackout hold (window lock)</span>
         </div>
       </div>
-
-      <div class="time-travel-actions">
-        <button class="btn btn-secondary btn-sm" onclick="advanceClock(24)" title="Advance 24 Hours (1st Retry Window)">
-          +24h (1st Window)
-        </button>
-        <button class="btn btn-secondary btn-sm" onclick="advanceClock(72)" title="Advance 72 Hours (2nd Retry Window)">
-          +72h (2nd Window)
-        </button>
-        <button class="btn btn-secondary btn-sm" onclick="advanceClock(168)" title="Advance 7 Days (Final Window)">
-          +7 Days (Final Window)
-        </button>
-        <button class="btn btn-warning btn-sm" onclick="jumpToBlackout()" title="Jump to 11:30 AM IST (NPCI peak blackout window)">
-          Jump into Blackout (11:30 AM)
-        </button>
-        <button class="btn btn-secondary btn-sm" onclick="jumpToCompliant()" title="Jump to 1:15 PM IST (compliant execution window)">
-          Compliant Window (1:15 PM)
-        </button>
-        <button class="btn btn-success" onclick="executeDueDebits()" title="Attempt collection on all matured retries">
-          Execute Due Debits Now
-        </button>
-      </div>
-    </section>
-
-    <!-- Executive KPI Grid -->
-    <section class="kpi-grid" id="kpi-section">
-      <div class="kpi-card blue">
-        <div class="kpi-header">
-          <span class="kpi-title">Total ₹ At Risk</span>
-          <div class="kpi-icon" style="color: var(--brand-cyan);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
-              <polyline points="17 18 23 18 23 12"/>
-            </svg>
-          </div>
-        </div>
-        <div class="kpi-value" id="kpiAtRisk">₹0</div>
-        <div class="kpi-subtitle">
-          Failed UPI AutoPay & E-Mandates
-        </div>
-      </div>
-
-      <div class="kpi-card green">
-        <div class="kpi-header">
-          <span class="kpi-title">Total ₹ Recovered</span>
-          <div class="kpi-icon" style="color: var(--accent-success);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="1" x2="12" y2="23"/>
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
-          </div>
-        </div>
-        <div class="kpi-value" id="kpiRecovered" style="color: var(--accent-success);">₹0</div>
-        <div class="kpi-subtitle">
-          Settled via compliant retries & PTP
-        </div>
-      </div>
-
-      <div class="kpi-card purple">
-        <div class="kpi-header">
-          <span class="kpi-title">Overall Recovery Rate</span>
-          <div class="kpi-icon" style="color: var(--accent-purple);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-              <polyline points="17 6 23 6 23 12"/>
-            </svg>
-          </div>
-        </div>
-        <div class="kpi-value" id="kpiRate">0.0%</div>
-        <div class="kpi-subtitle">
-          Excludes hard stops by design
-        </div>
-      </div>
-
-      <div class="kpi-card green">
-        <div class="kpi-header">
-          <span class="kpi-title">Compliance Violations</span>
-          <div class="kpi-icon" style="color: var(--accent-success);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <path d="m9 12 2 2 4-4"/>
-            </svg>
-          </div>
-        </div>
-        <div class="kpi-value" id="kpiViolations" style="color: var(--accent-success);">0 / 0</div>
-        <div class="kpi-subtitle">
-          <span class="kpi-badge" style="background: var(--accent-success-bg); color: var(--accent-success); border: 1px solid rgba(16, 185, 129, 0.3);">100% Guaranteed Zero Violations</span>
-        </div>
-      </div>
-
-      <div class="kpi-card amber">
-        <div class="kpi-header">
-          <span class="kpi-title">Stopping Rules Triggered</span>
-          <div class="kpi-icon" style="color: var(--accent-warning);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
-            </svg>
-          </div>
-        </div>
-        <div class="kpi-value" id="kpiStoppingRules">0</div>
-        <div class="kpi-subtitle">
-          Max 3 Retries Cap & RBI Hard Stops
-        </div>
-      </div>
-
-      <div class="kpi-card purple">
-        <div class="kpi-header">
-          <span class="kpi-title">Voice Escalations</span>
-          <div class="kpi-icon" style="color: var(--accent-purple);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
-            </svg>
-          </div>
-        </div>
-        <div class="kpi-value" id="kpiVoiceCount" style="color: var(--accent-purple);">0 calls</div>
-        <div class="kpi-subtitle">
-          Hinglish Promise-to-Pay Desk
-        </div>
-      </div>
-    </section>
-
-    <!-- Decline Taxonomy Breakdown -->
-    <section class="categories-section" id="taxonomy-section">
-      <div class="section-header">
-        <h2 class="section-title">
-          Decline Taxonomy & Recovery Analytics
-        </h2>
-        <span style="font-size: 0.75rem; color: var(--text-muted);">
-          Click any card to filter mandates below
-        </span>
-      </div>
-      <div class="category-grid" id="categoryGrid">
-        <!-- Injected via JavaScript -->
+      <div class="taxonomy-grid" id="categoryGrid">
+        <!-- Injected via JavaScript with differentiated weight treatments -->
       </div>
     </section>
 

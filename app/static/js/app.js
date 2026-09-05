@@ -117,6 +117,32 @@ async function jumpToCompliant() {
   }
 }
 
+// Animate counter figures smoothly during execution
+function animateFigure(elementId, startVal, endVal, isCurrency = true) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  if (startVal === endVal || isNaN(startVal) || isNaN(endVal)) {
+    el.innerText = isCurrency ? formatINR(endVal) : endVal;
+    return;
+  }
+  const duration = 650;
+  const startTime = performance.now();
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Smooth easeOutQuad
+    const ease = 1 - (1 - progress) * (1 - progress);
+    const current = Math.round(startVal + (endVal - startVal) * ease);
+    el.innerText = isCurrency ? formatINR(current) : current;
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      el.innerText = isCurrency ? formatINR(endVal) : endVal;
+    }
+  }
+  requestAnimationFrame(update);
+}
+
 async function executeDueDebits() {
   try {
     const res = await fetch('/api/execute-due', { method: 'POST' });
@@ -126,7 +152,12 @@ async function executeDueDebits() {
     } else {
       showToast(data.message, data.recovered_count > 0 ? 'success' : 'info');
     }
-    await refreshAll();
+    // Fetch analytics with animated counter transition
+    const analyticsRes = await fetch('/api/analytics');
+    state.analytics = await analyticsRes.json();
+    renderAnalytics(true);
+    await fetchStatus();
+    await fetchMandates();
   } catch (e) {
     showToast('Error executing due debits', 'danger');
   }
@@ -303,7 +334,7 @@ function renderStatus() {
   const { simulated_time_ist, is_in_blackout, hours_advanced_total } = state.status;
   
   document.getElementById('simulatedTimeClock').innerText = simulated_time_ist;
-  document.getElementById('hoursAdvancedLabel').innerText = `+${hours_advanced_total}h Advanced`;
+  document.getElementById('hoursAdvancedLabel').innerText = `+${hours_advanced_total}h`;
 
   const pulseDot = document.getElementById('clockPulseDot');
   const blackoutBadge = document.getElementById('blackoutBadge');
@@ -311,66 +342,80 @@ function renderStatus() {
   if (is_in_blackout) {
     pulseDot.className = 'pulse-dot blackout';
     blackoutBadge.className = 'blackout-badge active';
-    blackoutBadge.innerHTML = 'NPCI Peak Blackout (10am–1pm IST)';
+    blackoutBadge.innerText = 'Peak blackout lock (10:00 AM – 1:00 PM IST)';
   } else {
     pulseDot.className = 'pulse-dot';
     blackoutBadge.className = 'blackout-badge inactive';
-    blackoutBadge.innerHTML = 'Compliant Window (Ready)';
+    blackoutBadge.innerText = 'Compliant execution window';
   }
 }
 
-function renderAnalytics() {
+function renderAnalytics(animate = false) {
   if (!state.analytics) return;
   const a = state.analytics;
 
-  document.getElementById('kpiAtRisk').innerText = formatINR(a.total_at_risk_inr);
-  document.getElementById('kpiRecovered').innerText = formatINR(a.total_recovered_inr);
+  const prevRisk = state._prevAtRisk !== undefined ? state._prevAtRisk : a.total_at_risk_inr;
+  const prevRecovered = state._prevRecovered !== undefined ? state._prevRecovered : a.total_recovered_inr;
+
+  if (animate && prevRisk !== a.total_at_risk_inr) {
+    animateFigure('kpiAtRisk', prevRisk, a.total_at_risk_inr, true);
+    animateFigure('kpiRecovered', prevRecovered, a.total_recovered_inr, true);
+  } else {
+    document.getElementById('kpiAtRisk').innerText = formatINR(a.total_at_risk_inr);
+    document.getElementById('kpiRecovered').innerText = formatINR(a.total_recovered_inr);
+  }
+  state._prevAtRisk = a.total_at_risk_inr;
+  state._prevRecovered = a.total_recovered_inr;
+
   document.getElementById('kpiRate').innerText = `${a.overall_recovery_rate_pct}%`;
   document.getElementById('kpiViolations').innerText = `${a.compliance_violations} / 0`;
   document.getElementById('kpiStoppingRules').innerText = a.stopping_rules_triggered;
   document.getElementById('kpiVoiceCount').innerText = `${a.voice_escalations_count} calls`;
 
-  // Render Category Breakdown Cards
+  // Render Category Breakdown — Differentiated Small Multiples
   const container = document.getElementById('categoryGrid');
   container.innerHTML = '';
 
-  const tagClasses = {
-    'INSUFFICIENT_FUNDS': 'tag-insufficient',
-    'TECHNICAL_DECLINE': 'tag-technical',
-    'EXECUTION_WINDOW_BLOCKED': 'tag-blackout',
-    'MANDATE_EXPIRED': 'tag-expired',
-    'RBI_APPROVAL_REQUIRED': 'tag-rbi',
-    'PRE_DEBIT_NOTIFICATION_MISSED': 'tag-prenotif',
-  };
-
   const readableTitles = {
-    'INSUFFICIENT_FUNDS': 'Insufficient Funds',
-    'TECHNICAL_DECLINE': 'Technical Decline',
-    'EXECUTION_WINDOW_BLOCKED': 'Peak Blackout',
-    'MANDATE_EXPIRED': 'Mandate Expired',
-    'RBI_APPROVAL_REQUIRED': 'RBI Approval Req.',
-    'PRE_DEBIT_NOTIFICATION_MISSED': 'Pre-Debit Notice',
+    'INSUFFICIENT_FUNDS': 'Insufficient funds',
+    'TECHNICAL_DECLINE': 'Technical decline',
+    'EXECUTION_WINDOW_BLOCKED': 'Peak blackout lock',
+    'MANDATE_EXPIRED': 'Mandate expired',
+    'RBI_APPROVAL_REQUIRED': 'RBI approval required',
+    'PRE_DEBIT_NOTIFICATION_MISSED': 'Pre-debit notice lapse',
   };
 
   for (const [type, data] of Object.entries(a.breakdown_by_type || {})) {
     const card = document.createElement('div');
     const isSelected = state.selectedDeclineType === type;
-    card.className = `category-card ${isSelected ? 'active' : ''}`;
+    
+    // Weight differentiation: Hard stops (solid, heavy, sharp) vs Retryable (outline, lighter)
+    let weightClass = 'retryable';
+    let badgeHtml = '<span class="tax-badge retryable">Retryable</span>';
+    
+    if (!data.is_retryable || type === 'MANDATE_EXPIRED' || type === 'RBI_APPROVAL_REQUIRED') {
+      weightClass = 'hard-stop';
+      badgeHtml = '<span class="tax-badge hard-stop">Hard stop</span>';
+    } else if (type === 'EXECUTION_WINDOW_BLOCKED') {
+      weightClass = 'blackout';
+      badgeHtml = '<span class="tax-badge blackout">Blackout hold</span>';
+    }
+
+    card.className = `taxonomy-card ${weightClass} ${isSelected ? 'active' : ''}`;
     card.onclick = () => {
       state.selectedDeclineType = (state.selectedDeclineType === type) ? null : type;
-      renderAnalytics();
+      renderAnalytics(false);
       renderTable();
     };
 
-    const tagClass = tagClasses[type] || 'tag-insufficient';
     card.innerHTML = `
-      <span class="category-tag ${tagClass}">${data.is_retryable ? 'Retryable' : 'Hard Stop'}</span>
-      <div class="category-name">${readableTitles[type] || type}</div>
-      <div class="category-stats">
+      ${badgeHtml}
+      <div class="tax-title">${readableTitles[type] || type}</div>
+      <div class="tax-stats">
         <span>${data.count} records</span>
-        <span class="category-recovered">${formatINR(data.recovered_inr)}</span>
+        <span class="tax-recovered">${formatINR(data.recovered_inr)}</span>
       </div>
-      <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">
+      <div class="tax-meta">
         Recovery: <strong>${data.recovery_rate_pct}%</strong> of ${formatINR(data.at_risk_inr)}
       </div>
     `;
